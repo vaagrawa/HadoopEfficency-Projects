@@ -1,0 +1,43 @@
+package GetTaskTrackers;
+import java.net.InetSocketAddress;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.mapred.JobClient;
+import org.apache.hadoop.mapred.RunningJob;
+import org.apache.hadoop.mapred.TaskCompletionEvent;
+import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
+
+public class GetTasks implements Tool{
+
+	public static String jobID;
+	public static int killratio;
+	public Configuration getConf() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void setConf(Configuration arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public int run(String[] args) throws Exception {
+		// TODO Auto-generated method stub
+		jobID = args[0];
+		killratio= Integer.parseInt(args[1]);
+		JobClient theJobClient = new JobClient(new InetSocketAddress("172.16.2.8", 8080), new Configuration());
+		@SuppressWarnings("deprecation")
+		RunningJob theJob = ((RunningJob) theJobClient).getID(); // caution, deprecated
+		TaskCompletionEvent[] taskcompletionevents = theJob.getTaskCompletionEvents(0);
+		for(TaskCompletionEvent t : taskcompletionevents){
+			System.out.println("Task ID: "+t.getTaskId() + "Task Status" + t.getTaskStatus() + "Task Time: " + t.getTaskRunTime());
+		}
+		return 0;
+	}
+	public static void main(String args[]) throws Exception{
+		int exitCode = ToolRunner.run(new GetTasks(), args);
+		System.exit(exitCode);
+	}
+
+}

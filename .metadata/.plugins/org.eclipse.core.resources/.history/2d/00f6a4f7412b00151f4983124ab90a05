@@ -1,0 +1,6 @@
+package GetTaskTrackers;
+import org.apache.hadoop.mapreduce;
+
+public class GetTasks implements JobClient {
+
+}
